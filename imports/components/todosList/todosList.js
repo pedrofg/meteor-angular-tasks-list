@@ -10,12 +10,12 @@ class TodosListCtrl {
     $scope.viewModel(this);
 
     this.subscribe('tasks');
+    this.subscribe('userList');
 
     this.hideCompleted = false;
 
     this.helpers({
       tasks() {
-
         const selector = {};
 
         // If hide completed is checked, filter tasks
@@ -29,8 +29,9 @@ class TodosListCtrl {
         return Tasks.find(selector, {
           sort: {
             createdAt: -1
-          }
+          },
         });
+
       },
       incompleteCount() {
         return Tasks.find({
@@ -41,7 +42,10 @@ class TodosListCtrl {
       },
       currentUser() {
         return Meteor.user();
-      }
+      },
+      userList() {
+        return Meteor.users.find();
+      },
     })
   }
 

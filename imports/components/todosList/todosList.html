@@ -6,6 +6,11 @@
     Hide Completed Tasks
   </label>
 
+  <label class="sort-by-user">
+    <input type="checkbox" ng-model="$ctrl.sortByUser"/>
+    Group Task by User
+  </label>
+
   <login-buttons></login-buttons>
 
   <form class="new-task" ng-submit="$ctrl.addTask($ctrl.newTask)" ng-show="$ctrl.currentUser">
@@ -14,18 +19,41 @@
 
 </header>
 
-<ul>
-  <li ng-repeat="task in $ctrl.tasks" ng-class="{'checked': task.checked, 'private': task.private}">
-    <button class="delete" ng-click="$ctrl.removeTask(task)">&times;</button>
+<ul ng-show="!$ctrl.sortByUser">
+    <li ng-repeat="task in $ctrl.tasks" ng-class="{'checked': task.checked, 'private': task.private}">
+      <button class="delete" ng-click="$ctrl.removeTask(task)" ng-show="task.owner === $ctrl.currentUser._id">&times;</button>
 
-    <input type="checkbox" ng-checked="task.checked" ng-click="$ctrl.setChecked(task)" class="toggle-checked"/>
+      <input type="checkbox" ng-checked="task.checked" ng-click="$ctrl.setChecked(task)" class="toggle-checked"/>
 
+      <span class="text">
+        <strong>{{task.username}}</strong> - {{task.text}} ({{task._id}})
+      </span>
+
+      <button class="toggle-private" ng-click="$ctrl.setPrivate(task)" ng-show="task.owner === $ctrl.currentUser._id">
+        {{task.private == true ? "Private" : "Public"}}
+      </button>
+    </li>
+</ul>
+
+<ul ng-show="$ctrl.sortByUser">
+  <li ng-repeat="user in $ctrl.userList" >
     <span class="text">
-      <strong>{{task.username}}</strong> - {{task.text}}
+      <strong>{{user.username}}</strong>
     </span>
+    <ul>
+      <li ng-repeat="task in $ctrl.tasks" ng-show="task.owner === user._id" ng-class="{'checked': task.checked, 'private': task.private}">
+        <button class="delete" ng-click="$ctrl.removeTask(task)" ng-show="task.owner === $ctrl.currentUser._id">&times;</button>
 
-    <button class="toggle-private" ng-click="$ctrl.setPrivate(task)" ng-show="task.owner === $ctrl.currentUser._id">
-      {{task.private == true ? "Private" : "Public"}}
-    </button>
+        <input type="checkbox" ng-checked="task.checked" ng-click="$ctrl.setChecked(task)" class="toggle-checked"/>
+
+        <span class="text">
+          <strong>{{task.text}}</strong> ({{task._id}})
+        </span>
+
+        <button class="toggle-private" ng-click="$ctrl.setPrivate(task)" ng-show="task.owner === $ctrl.currentUser._id">
+          {{task.private == true ? "Private" : "Public"}}
+        </button>
+      </li>
+    </ul>
   </li>
 </ul>

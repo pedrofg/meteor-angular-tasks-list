@@ -104,6 +104,11 @@ header .hide-completed {
   float: right;
 }
 
+header .sort-by-user {
+  float: right;
+  margin-right: 10px;
+}
+
 .toggle-private {
   margin-left: 5px;
 }
