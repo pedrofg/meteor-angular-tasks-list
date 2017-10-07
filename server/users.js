@@ -10,14 +10,14 @@ Meteor.publish('userList', function () {
 Accounts.onLogin(function(user){
   console.log("User logged in: " + user.user._id);
 
-  Meteor.setTimeout(function () {
-    console.log("User Login expired: " + user.user._id);
-
-     //Update database deleting the user session token
-     Meteor.users.update(user.user._id, {
-       $set: {
-         "services.resume.loginTokens" : [] }
-       });
-  }, 10000);
+  // Meteor.setTimeout(function () {
+  //   console.log("User Login expired: " + user.user._id);
+  //
+  //    //Update database deleting the user session token
+  //    Meteor.users.update(user.user._id, {
+  //      $set: {
+  //        "services.resume.loginTokens" : [] }
+  //      });
+  // }, 10000);
 
 });

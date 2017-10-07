@@ -60,6 +60,7 @@ class TodosListCtrl {
   setChecked(task) {
     // Set the checked property to the opposite of its current value
     Meteor.call('tasks.setChecked', task._id, !task.checked);
+    console.log("set checked: " + !task.checked);
   }
 
   removeTask(task) {
@@ -68,6 +69,8 @@ class TodosListCtrl {
 
   setPrivate(task) {
    Meteor.call('tasks.setPrivate', task._id, !task.private);
+
+   console.log("set private: " + task.private);
  }
 }
 
