@@ -44,7 +44,11 @@ class TodosListCtrl {
         return Meteor.user();
       },
       userList() {
-        return Meteor.users.find();
+        return Meteor.users.find({}, {
+          sort: {
+            createdAt: -1
+          }
+        });
       },
     })
   }

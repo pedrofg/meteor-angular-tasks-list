@@ -1,22 +1,4 @@
 <header>
-
-
-  <!-- <label class="hide-completed">
-    <input type="checkbox" ng-model="$ctrl.hideCompleted"/>
-    Hide Completed Tasks
-  </label>
-
-  <label class="sort-by-user">
-    <input type="checkbox" ng-model="$ctrl.sortByUser"/>
-    Group Task by User
-  </label>
-
-  <login-buttons></login-buttons>
-
-  <form class="new-task" ng-submit="$ctrl.addTask($ctrl.newTask)" ng-show="$ctrl.currentUser">
-    <input ng-model="$ctrl.newTask" type="text" name="text" placeholder="Type to add new tasks"/>
-  </form> -->
-
   <nav class="red">
     <div class="container">
       <div class="nav-wrapper">
@@ -29,36 +11,63 @@
       </div>
     </div>
   </nav>
-
-
-
 </header>
 
-  <div class="container">
+<div class="container">
 
-    <div class="row">
-      <form class="add-form col s12" ng-submit="$ctrl.addTask($ctrl.newTask)" ng-show="$ctrl.currentUser" style="margin-top:20px;">
-        <div class="input-field col s12">
-          <i class="material-icons prefix">today</i>
-          <label for="task_name">Add Task</label>
-          <input ng-model="$ctrl.newTask" id="task_name" type="text" name="text" placeholder="Type task and hit enter"/>
-        </div>
-      </form>
-    </div>
-
-    <div class="row div-filters">
-      <input type="checkbox" id="completed-tasks"  ng-model="$ctrl.hideCompleted" />
-      <label for="completed-tasks">Hide Completed Tasks</label>
-      <div class="second-filter">
-        <input type="checkbox" id="group-tasks"  ng-model="$ctrl.sortByUser" />
-        <label for="group-tasks">Group Tasks by User</label>
+  <div class="row">
+    <form class="add-form col s12" ng-submit="$ctrl.addTask($ctrl.newTask)" ng-show="$ctrl.currentUser" style="margin-top:20px;">
+      <div class="input-field col s12">
+        <i class="material-icons prefix">today</i>
+        <label for="task_name">Add Task</label>
+        <input ng-model="$ctrl.newTask" id="task_name" type="text" name="text" placeholder="Type task and hit enter"/>
       </div>
+    </form>
+  </div>
+
+  <div class="row div-filters">
+    <input type="checkbox" id="completed-tasks"  ng-model="$ctrl.hideCompleted" />
+    <label for="completed-tasks">Hide Completed Tasks</label>
+    <div class="second-filter">
+      <input type="checkbox" id="group-tasks"  ng-model="$ctrl.sortByUser" />
+      <label for="group-tasks">Group Tasks by User</label>
     </div>
+  </div>
 
 
 
-    <ul ng-show="!$ctrl.sortByUser" class="collection">
-        <li ng-repeat="task in $ctrl.tasks" ng-class="{'checked': task.checked}" class="collection-item">
+  <ul ng-show="!$ctrl.sortByUser" class="collection">
+      <li ng-repeat="task in $ctrl.tasks" ng-class="{'checked': task.checked}" class="collection-item">
+
+        <a href="#" class="delete-note secondary-content" ng-click="$ctrl.removeTask(task)" ng-show="task.owner === $ctrl.currentUser._id">
+          <i class="material-icons">close</i>
+        </a>
+
+        <input type="checkbox" class="filled-in" id="filled-in-box-{{task._id}}" ng-checked="task.checked" ng-click="$ctrl.setChecked(task)" />
+        <label for="filled-in-box-{{task._id}}" class="text">
+          <strong class="task-owner">{{task.username}}</strong> - {{task.text}} ({{task._id}}), {{task.createdAt | date: 'dd-MM-yyyy'}}
+        </label>
+
+        <div class="switch" ng-show="task.owner === $ctrl.currentUser._id">
+          <label>
+            Public
+            <input type="checkbox" ng-checked="task.private" ng-click="$ctrl.setPrivate(task)">
+            <span class="lever"></span>
+            Private
+          </label>
+        </div>
+
+      </li>
+  </ul>
+
+  <ul ng-show="$ctrl.sortByUser" class="collection">
+    <li ng-repeat="user in $ctrl.userList" class="collection-item">
+
+      <p class="task-owner">
+        <strong>{{user.username}}</strong>
+      </p>
+      <ul class="collection">
+        <li ng-repeat="task in $ctrl.tasks | filter:{ owner: user._id }" ng-class="{'checked': task.checked}" class="collection-item">
 
           <a href="#" class="delete-note secondary-content" ng-click="$ctrl.removeTask(task)" ng-show="task.owner === $ctrl.currentUser._id">
             <i class="material-icons">close</i>
@@ -66,7 +75,7 @@
 
           <input type="checkbox" class="filled-in" id="filled-in-box-{{task._id}}" ng-checked="task.checked" ng-click="$ctrl.setChecked(task)" />
           <label for="filled-in-box-{{task._id}}" class="text">
-            <strong class="task-owner">{{task.username}}</strong> - {{task.text}} ({{task._id}}), {{task.createdAt | date: 'dd-MM-yyyy'}}
+            <strong>{{task.text}}</strong> ({{task._id}}), {{task.createdAt | date: 'dd-MM-yyyy'}}
           </label>
 
           <div class="switch" ng-show="task.owner === $ctrl.currentUser._id">
@@ -79,40 +88,10 @@
           </div>
 
         </li>
-    </ul>
-
-    <ul ng-show="$ctrl.sortByUser" class="collection">
-      <li ng-repeat="user in $ctrl.userList" class="collection-item">
-
-        <p class="task-owner">
-          <strong>{{user.username}}</strong>
-        </p>
-        <ul class="collection">
-          <li ng-repeat="task in $ctrl.tasks | filter:{ owner: user._id }" ng-class="{'checked': task.checked}" class="collection-item">
-
-            <a href="#" class="delete-note secondary-content" ng-click="$ctrl.removeTask(task)" ng-show="task.owner === $ctrl.currentUser._id">
-              <i class="material-icons">close</i>
-            </a>
-
-            <input type="checkbox" class="filled-in" id="filled-in-box-{{task._id}}" ng-checked="task.checked" ng-click="$ctrl.setChecked(task)" />
-            <label for="filled-in-box-{{task._id}}" class="text">
-              <strong>{{task.text}}</strong> ({{task._id}}), {{task.createdAt | date: 'dd-MM-yyyy'}}
-            </label>
-
-            <div class="switch" ng-show="task.owner === $ctrl.currentUser._id">
-              <label>
-                Public
-                <input type="checkbox" ng-checked="task.private" ng-click="$ctrl.setPrivate(task)">
-                <span class="lever"></span>
-                Private
-              </label>
-            </div>
-
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
+      </ul>
+    </li>
+  </ul>
+</div>
 
 
 
